@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ninja Gold</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div id="wrapper">
+        <header class="page_header">
+            <h1>Ninja Gold</h1>
+        </header>
+        <main class="main_content">
+            <header class="content_header">
+                <p>Your Gold:</p>
+                <p class="gold_display">{{request.session.gold}}</p>
+            </header>
+            <div class="content_box_container">
+                {% for location, value in locations.items %}
+                <div class="location_box">
+                    <form action="/process_money" method="POST">
+                        {% csrf_token %}
+                        <h3>{{location}}</h3>
+                        <p class="earnings_description">
+                            ( {{value}} )
+                        </p>
+                        <button type="submit" name="find_gold_btn">Find Gold</button>
+                        <input type="hidden" name="which_form" value="{{location}}">
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="activities_container">
+                <h4>Activities:</h4>
+                <ul class="activities_list">
+                    {% for log_item in request.session.activities %}
+                    <li>{{log_item}}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </main>
+        <footer class="page_footer">
+            <form action="/reset" method="POST">
+                {% csrf_token %}
+                <button type="submit" name="reset_data">Reset Data</button>
+            </form>
+        </footer>
+    </div>
+</body>
+</html>
